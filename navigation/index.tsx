@@ -8,16 +8,26 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName, Pressable, Text } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import CartScreen from '../screens/CartScreen';
+import HomeScreen from '../screens/HomeScreen';
+import ShopsScreen from '../screens/ShopsScren';
+import CartSVGIcon from '../assets/icons/Cart_alt.svg';
+import HomeSVGIcon from '../assets/icons/Home_alt.svg';
+import LocationSVGIcon from '../assets/icons/Location.svg';
+import ProfileSVGIcon from '../assets/icons/User_male_circle.svg';
+import CoinsSVGIcon from '../assets/icons/Coins.svg';
+import MenuSVGIcon from '../assets/icons/Circle_menu.svg';
+import ProfileScreen from '../screens/ProfileScreen';
+import OrderScreen from '../screens/OrderScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -25,6 +35,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
+      {/* <ProfileNavigator /> */}
     </NavigationContainer>
   );
 }
@@ -37,11 +48,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='Root' component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name='NotFound' component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name='Modal' component={ModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -52,56 +63,73 @@ function RootNavigator() {
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
-
+const iconSize = {
+  width: 18,
+  height: 18,
+}
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        headerShown: false,
+        tabBarStyle: {
+          height: 56
+        }
       }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: 'ГЛАВНАЯ',
+          tabBarIcon: () => <HomeSVGIcon width={iconSize.width} height={iconSize.width} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Shops"
+        component={ShopsScreen}
+        options={({ navigation }: RootTabScreenProps<'Shops'>) => ({
+          title: 'ПИЦЕРИИ',
+          tabBarIcon: () => <LocationSVGIcon width={iconSize.width} height={iconSize.height} />,
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="Cart"
+        component={CartScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'КОРЗИНА',
+          tabBarIcon: () => {
+            return (
+              <>
+                <Text style={{
+                  position: 'absolute',
+                  fontSize: 8,
+                  top: 30,
+                }}>1200</Text>
+                <CartSVGIcon width={iconSize.width} height={iconSize.width} />
+              </>
+            )
+          }
+        }}
+      />
+      <BottomTab.Screen
+        name='Profile'
+        component={ProfileScreen}
+        options={{
+          title: 'ПРОФИЛЬ',
+          tabBarIcon: () => <ProfileSVGIcon width={iconSize.width} height={iconSize.height} />
+        }}
+      />
+      <BottomTab.Screen
+        name='Other'
+        component={OrderScreen}
+        options={{
+          title: 'Еще',
+          tabBarIcon: () => <MenuSVGIcon width={iconSize.width} height={iconSize.height} />
         }}
       />
     </BottomTab.Navigator>
   );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
