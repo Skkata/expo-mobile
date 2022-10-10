@@ -35,7 +35,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <RootNavigator />
-      {/* <ProfileNavigator /> */}
     </NavigationContainer>
   );
 }
@@ -123,7 +122,7 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name='Other'
+        name='More'
         component={OrderScreen}
         options={{
           title: 'Еще',

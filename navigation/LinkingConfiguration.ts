@@ -34,6 +34,11 @@ const linking: LinkingOptions<RootStackParamList> = {
             screens: {
               CartScreen: 'cart'
             }
+          },
+          More: {
+            screens: {
+              MoreScreen: 'more'
+            }
           }
         },
       },

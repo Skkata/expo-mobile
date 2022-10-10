@@ -5,7 +5,7 @@ import { Text, View } from "./Themed";
 export default function Header() {
     return(
         <View style={style.header}>
-            <Text style={style.logotype}>DELIVERY</Text>
+            <Text style={style.logotype}>TELIVERY</Text>
             {/* <TouchableOpacity 
                 // onPress={() => navigation.push('Profile')}
             >
